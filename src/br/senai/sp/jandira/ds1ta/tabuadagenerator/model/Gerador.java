@@ -1,4 +1,4 @@
-package br.senai.sp.jandira.ds1ta.tabuadagenerator;
+package br.senai.sp.jandira.ds1ta.tabuadagenerator.model;
 import java.util.Scanner;
 
 public class Gerador {
@@ -6,6 +6,7 @@ public class Gerador {
     public int multiplicadorInicial;
     public int multiplicadorFinal;
     public int multiplicadorApoio;
+    public int tabuadaPublic;
 
     Scanner leitor = new Scanner(System.in);
 
@@ -29,14 +30,16 @@ public class Gerador {
             multiplicadorInicial = multiplicadorApoio;
         }
 
-        //criando vetor tabuada com tamanho multiplicadorFinal - multiplicadorInicial + 1
+        //criando vetor tabuada com tamanho [multiplicadorFinal - multiplicadorInicial + 1].
         int [] tabuada = new int[multiplicadorFinal - multiplicadorInicial + 1];
         int i = multiplicadorInicial;
+
         while (i <= multiplicadorFinal){
             System.out.println(multiplicando + "x" + i + " = " + multiplicando * i);
             i = i + 1;
         }
-        System.out.println("-----------------------------------");
+        tabuadaPublic = tabuada[0];
+
         getData();
     }
 }
