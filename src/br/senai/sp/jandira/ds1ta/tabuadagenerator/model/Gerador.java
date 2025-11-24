@@ -6,24 +6,14 @@ public class Gerador {
     public int multiplicadorInicial;
     public int multiplicadorFinal;
     public int multiplicadorApoio;
-    public int tabuadaPublic;
+    public int tamanho;
+    public String[] tabuada;
+    public int i;
 
-    Scanner leitor = new Scanner(System.in);
-
-    public void getData(){
-        System.out.println("Bem vindo ao Gerador de Tabuadas (tm)");
-        System.out.print("Digite o valor do multiplicando: ");
-        multiplicando = leitor.nextInt();
-        System.out.print("Digite o valor do multiplicador inicial: ");
-        multiplicadorInicial = leitor.nextInt();
-        System.out.print("Digite o valor do multiplicador final: ");
-        multiplicadorFinal = leitor.nextInt();
-        System.out.println("Gerando tabuada...");
-        gerarTabuada();
-    }
-    public void gerarTabuada(){
+    public String[] gerarTabuada(){
 
         //invertendo multiplicadores final e inicial.
+        multiplicadorApoio = 0;
         if (multiplicadorFinal<multiplicadorInicial){
             multiplicadorApoio = multiplicadorFinal;
             multiplicadorFinal = multiplicadorInicial;
@@ -31,15 +21,14 @@ public class Gerador {
         }
 
         //criando vetor tabuada com tamanho [multiplicadorFinal - multiplicadorInicial + 1].
-        int [] tabuada = new int[multiplicadorFinal - multiplicadorInicial + 1];
-        int i = multiplicadorInicial;
+        tamanho = multiplicadorFinal-multiplicadorInicial+1;
+        tabuada = new String[tamanho];
+
 
         while (i <= multiplicadorFinal){
-            System.out.println(multiplicando + "x" + i + " = " + multiplicando * i);
+            //tabuada[multiplicadorFinal-multiplicadorInicial+1] = (i + " x " + multiplicando + " = " + i*multiplicando);
             i = i + 1;
         }
-        tabuadaPublic = tabuada[0];
-
-        getData();
+        return tabuada;
     }
 }

@@ -15,12 +15,21 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import static javafx.geometry.Pos.CENTER;
+
 public class TelaTabuada extends Application {
     @Override
     public void start(Stage stage) throws Exception {
-        stage.setWidth(500);
         stage.setHeight(500);
-        stage.setResizable(true);
+        stage.setResizable(false);
         stage.setTitle("Tabuada");
 
         //criar elemento principal, criar a cena, colocar o elemento principal na cena e a cena no palco
@@ -31,13 +40,15 @@ public class TelaTabuada extends Application {
         //criar header
         VBox header = new VBox();
         header.setPrefHeight(100);
-        header.setStyle("-fx-background-color: #000000");
 
 
         //adicionar conteúdo ao header
-        Label lblTitulo = new Label("Tabuada");
+        Label lblTitulo = new Label("Tabuada!");
+        lblTitulo.setStyle("-fx-font-size: 20px;");
+        lblTitulo.setAlignment(CENTER);
+
         Label lblSubTitulo = new Label("Crie a tabuada que a sua imaginação mandar.");
-        header.getChildren().addAll(lblTitulo,lblSubTitulo);
+        header.getChildren().addAll(lblTitulo, lblSubTitulo);
 
         //criar gridpane
         GridPane gridPane = new GridPane();
@@ -53,23 +64,25 @@ public class TelaTabuada extends Application {
 
         Label lblIntervaloMenor = new Label("Intervalo menor:");
         TextField tfIntervaloMenor = new TextField();
-
         Label lblIntervaloMaior = new Label("Intervalo maior:");
         TextField tfIntervaloMaior = new TextField();
 
 
         //colocar os componentes no grid
 
-        gridPane.add(lblMultiplicando,0,0);
-        gridPane.add(tfMultiplicando,1,0);
-        gridPane.add(lblIntervaloMenor,0,1);
-        gridPane.add(tfIntervaloMenor,1,1);
-        gridPane.add(lblIntervaloMaior,0,2);
-        gridPane.add(tfIntervaloMaior,1,2);
+        gridPane.add(lblMultiplicando, 0, 0);
+        gridPane.add(tfMultiplicando, 1, 0);
+        gridPane.add(lblIntervaloMenor, 0, 1);
+        gridPane.add(tfIntervaloMenor, 1, 1);
+        gridPane.add(lblIntervaloMaior, 0, 2);
+        gridPane.add(tfIntervaloMaior, 1, 2);
 
         //hbox de botoes
         HBox botoes = new HBox();
         botoes.setPrefHeight(100);
+        botoes.setAlignment(CENTER);
+        botoes.setSpacing(10);
+        botoes.setPadding(new Insets(10, 10, 10, 10));
         botoes.setStyle("-fx-background-color: #106a56");
 
         //criar botoes
@@ -79,21 +92,19 @@ public class TelaTabuada extends Application {
 
         //botar os botoes no hbox
 
-        botoes.getChildren().addAll(calcular,Limpar,sair);
+        botoes.getChildren().addAll(calcular, Limpar, sair);
 
         //criar vbox de resultados
         VBox resultados = new VBox();
-        resultados.setPrefHeight(200);
         resultados.setStyle("-fx-background-color: red");
 
         //criar conteúdo de resultados
         Label lblResultados = new Label("Resultados:");
-        ListView lista = new ListView();
-
+        ListView listaTabuada = new ListView();
 
 
         //adicionar conteúdo ao vbox resultados
-        resultados.getChildren().addAll(lista,lblResultados);
+        resultados.getChildren().addAll(lblResultados, listaTabuada);
 
         //adicionar componentes ao root
         root.getChildren().add(header);
@@ -103,7 +114,35 @@ public class TelaTabuada extends Application {
 
         stage.show();
 
+        calcular.setOnAction(e -> {
+            Gerador gerador = new Gerador();
+            gerador.multiplicadorInicial =
+                    Integer.parseInt(tfIntervaloMenor.getText());
+            gerador.multiplicadorFinal =
+                    Integer.parseInt(tfIntervaloMaior.getText());
+            gerador.multiplicando =
+                    Integer.parseInt(tfMultiplicando.getText());
+            listaTabuada.getItems().add(gerador.gerarTabuada());
 
+            //gravar os dados da tabuada em arquivo
+            Path arquivo = Path.of("C:\\Users\\25203672\\Desktop\\TabuadaGenerator\\tabuada_data");
+
+            String dados = tfMultiplicando.getText() + ";" + tfIntervaloMenor.getText() + ";" + tfIntervaloMaior.getText() + ";" + LocalDateTime.now() + "\n";
+            try {
+                Files.writeString(arquivo, dados, StandardOpenOption.APPEND);
+            } catch (IOException erro) {
+                System.out.println(erro.getMessage());
+            }
+
+        });
+
+        Limpar.setOnAction(e -> {
+            listaTabuada.getItems().clear();
+            tfIntervaloMenor.clear();
+            tfIntervaloMaior.clear();
+            tfMultiplicando.clear();
+            tfMultiplicando.requestFocus();
+
+        });
     }
-
 }
